@@ -18,7 +18,7 @@ Alternatively, the package can be installed by cloning the repository and runnin
 
 ## Your First Ludus Agent
 
-To get started, the [vpg_cartpole example](https://github.com/ejmejm/ludus/blob/master/vpg_cartpole.ipynb) steps through the creation and training process for a simple agent. It is recommended that you use the notebook as an initial testing ground, and a template for other agents.
+To get started, the [vpg_cartpole example](https://github.com/ejmejm/ludus/blob/master/examples/vpg_cartpole.ipynb) steps through the creation and training process for a simple agent. It is recommended that you use the notebook as an initial testing ground, and a template for other agents.
 
 In Ludus, the process of creating an intelligent agent can be divided into 3 major steps. Performing the 1st step, and then repeating steps 2 and 3 in a training loop is the typical program flow:
 1. __Creating input networks__
