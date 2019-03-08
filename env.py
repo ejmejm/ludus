@@ -53,6 +53,8 @@ class EnvController():
             self.act_transform = act_transform
         self.act_lock = threading.Lock()
         self.init_lock = threading.Lock()
+    
+        self.get_data = self.mb.to_data
         
     def obs_transform(self, obs):
         """Uses the stored observation transformation function to transform the given observation.
@@ -94,6 +96,13 @@ class EnvController():
         """
         self.act_transform = transform_func
         
+    def pre_episode_steps(self):
+        """Runs before each new episode"""
+        pass
+    
+    def set_pre_episode_steps(self, func):
+        pre_episode_steps = func
+        
     def sim_thread(self, agent_id, network, n_episodes=1, max_steps=200, render=False):
         """Playthrough episodes of the instance's environment, collecting data in the memory
         buffer that can be used for training or other purposes. The data from the memory buffer
@@ -122,6 +131,7 @@ class EnvController():
             self.mb.start_rollout(agent_id)
             obs = env.reset()
             obs = self.obs_transform(obs)
+            self.pre_episode_steps()
             for step in range(max_steps):
                 with self.act_lock:
                     act = network.gen_act(obs)
@@ -157,9 +167,6 @@ class EnvController():
         
     def get_avg_reward(self):
         return self.mb.get_avg_reward()
-    
-    def get_data(self):
-        return self.mb.to_data()
     
     def render_episodes(self, network, n_episodes=1, max_steps=200):
         with self.init_lock:

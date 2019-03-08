@@ -1,2 +1,6 @@
 __pycache__/
 docs/
+*__pycache__*
+ludus.egg-info/
+dist/
+examples/.ipynb_checkpoints/

@@ -30,7 +30,7 @@ class MemoryBuffer():
     def _record_4_vars(self, obs, act, rew, obs_next):
         self.rollouts[self.rollout_idx].append([obs, act, rew, obs_next])
         
-    def to_data(self, reset=True):
+    def to_data(self, reset=True, sep_rollouts=False):
         all_data = []
         
         try:
@@ -38,7 +38,10 @@ class MemoryBuffer():
                 rollout = np.array(rollout)
                 # Discount the rewards for every rollout
                 rollout[:,2] = discount_rewards(rollout[:,2])
-                all_data.extend(list(rollout))
+                if sep_rollouts:
+                    all_data.append(np.array(rollout))
+                else:
+                    all_data.extend(list(rollout))
 
             if reset:
                 self.reset()
