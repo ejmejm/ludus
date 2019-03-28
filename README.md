@@ -8,7 +8,7 @@ These instructions will help you quickly get Ludus up and running, ready for RL 
 
 ### Prerequisites
 
-Ludus requires several libraries to get started. Anaconda 3 is recommended as it contains most of the required libraries, as well as many related libraries that may be useful. Nearly all prerequisites are installed when doing the standard pip installation as described below. The exeption is Tensorflow with GPU support. While __GPU enabled Tensorflow is strongly recommended__ over the CPU version, it is not required. You can find a guide to installing GPU enabled Tensorflow [here](https://www.tensorflow.org/install/gpu).
+Ludus requires several libraries to get started. Anaconda 3 is recommended as it contains most of the required libraries, as well as many related libraries that may be useful. Nearly all prerequisites are installed when doing the standard pip installation as described below. The exeption is Tensorflow. While __GPU enabled Tensorflow is strongly recommended__ over the CPU version, it is not required. You can find a guide to installing GPU enabled Tensorflow [here](https://www.tensorflow.org/install/gpu), and CPU Tensorflow [here](https://www.tensorflow.org/install).
 
 ### Installing
 

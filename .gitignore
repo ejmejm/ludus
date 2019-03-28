@@ -1,5 +1,6 @@
-__pycache__/
+ludus/__pycache__/
 docs/
 **/__pychache__/
 **/.ipynb_checkpoints/
-examples/models
+ludus/examples/models
+upload_dist.sh
