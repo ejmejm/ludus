@@ -177,14 +177,14 @@ class EnvController():
         
         for episode in range(n_episodes):
             obs = env.reset()
-            obs = self.obs_transform(obs, agent_id)
+            obs = self.obs_transform(obs, 0)
             for step in range(max_steps):
                 with self.act_lock:
                     act = network.gen_act(obs)
-                act = self.act_transform(act, agent_id)
+                act = self.act_transform(act, 0)
 
                 obs_next, rew, d, _ = env.step(act)
-                obs_next = self.obs_transform(obs_next, agent_id)
+                obs_next = self.obs_transform(obs_next, 0)
                 obs = obs_next
 
                 env.render()
