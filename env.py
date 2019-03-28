@@ -54,22 +54,32 @@ class EnvController():
         self.act_lock = threading.Lock()
         self.init_lock = threading.Lock()
         
-    def obs_transform(self, obs):
+    def obs_transform(self, obs, agent_id):
         """Uses the stored observation transformation function to transform the given observation.
         
         Args:
             obs: Observation from the environment.
+            agent_id: An integer agent ID is provided but not used. It is present
+                for the case in which a user would like to make use of it to have a
+                different transformation based which thread the transformation takes
+                place in. This allows the possibillity of making sure transofrmations
+                that rely on temporal data are not interfered with by other threads.
         
         Returns:
             Observation after formated by the instance's obs transformation function.
         """
         return obs.squeeze()
     
-    def act_transform(self, act):
+    def act_transform(self, act, agent_id):
         """Uses the stored action transformation function to transform the given action.
         
         Args:
             act: Action chosen by the agent.
+            agent_id: An integer agent ID is provided but not used. It is present
+                for the case in which a user would like to make use of it to have a
+                different transformation based which thread the transformation takes
+                place in. This allows the possibillity of making sure transofrmations
+                that rely on temporal data are not interfered with by other threads.
         
         Returns:
             Action after formated by the instance's act transformation function.
@@ -121,14 +131,14 @@ class EnvController():
         for episode in range(n_episodes):
             self.mb.start_rollout(agent_id)
             obs = env.reset()
-            obs = self.obs_transform(obs)
+            obs = self.obs_transform(obs, agent_id)
             for step in range(max_steps):
                 with self.act_lock:
                     act = network.gen_act(obs)
-                act = self.act_transform(act)
+                act = self.act_transform(act, agent_id)
 
                 obs_next, rew, d, _ = env.step(act)
-                obs_next = self.obs_transform(obs_next)
+                obs_next = self.obs_transform(obs_next, agent_id)
 
                 if render:
                     env.render()
