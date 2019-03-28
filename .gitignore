@@ -1,2 +1,5 @@
 __pycache__/
 docs/
+**/__pychache__/
+**/.ipynb_checkpoints/
+examples/models
