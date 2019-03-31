@@ -1,6 +1,7 @@
 import numpy as np
 import threading
 import time
+from inspect import signature
 import gym
 from ludus.cart_pole_cont import CartPoleEnv
 from ludus.memory import MTMemoryBuffer
@@ -93,7 +94,16 @@ class EnvController():
             transform_func: Function that is applied to every observation from the environment 
                 before the observations are recorded and used.
         """
-        self.obs_transform = transform_func
+        n_args = len(signature(transform_func).parameters)
+        
+        if n_args == 0:
+            self.obs_transform = lambda obs, agent_id: transform_func()
+        elif n_args == 1:
+            self.obs_transform = lambda obs, agent_id: transform_func(obs)
+        elif n_args == 2:
+            self.obs_transform = transform_func
+        else:
+            raise ValueError('the transformation function must take no more than 2 arguments')
     
     def set_act_transform(self, transform_func):
         """Sets the action transformation function.
@@ -102,7 +112,16 @@ class EnvController():
             transform_func: Function that is applied to every action from the environment 
                 before the actions are recorded and used.
         """
-        self.act_transform = transform_func
+        n_args = len(signature(transform_func).parameters)
+        
+        if n_args == 0:
+            self.act_transform = lambda obs, agent_id: transform_func()
+        elif n_args == 1:
+            self.cat_transform = lambda obs, agent_id: transform_func(obs)
+        elif n_args == 2:
+            self.act_transform = transform_func
+        else:
+            raise ValueError('the transformation function must take no more than 2 arguments')
         
     def sim_thread(self, agent_id, network, n_episodes=1, max_steps=200, render=False):
         """Playthrough episodes of the instance's environment, collecting data in the memory
