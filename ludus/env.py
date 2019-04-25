@@ -123,7 +123,7 @@ class EnvController():
         else:
             raise ValueError('the transformation function must take no more than 2 arguments')
         
-    def sim_thread(self, agent_id, network, n_episodes=1, max_steps=200, render=False):
+    def sim_thread(self, agent_id, network, n_episodes=1, max_steps=200, render=False, act_skip=1):
         """Playthrough episodes of the instance's environment, collecting data in the memory
         buffer that can be used for training or other purposes. The data from the memory buffer
         is not extracted until a call to the 'get_data' method.
@@ -143,6 +143,8 @@ class EnvController():
                 traing should be done without rendering for significantly faster speeds.
                 Rendering for the purpose of tracking progress or curiosity should ideally be
                 done with the 'render_episodes' method.
+            act_skip (int): How many times in a row to use the chosen action. This can 
+                be used to simulate frame-delayed action making. (default: 1)
         """
         with self.init_lock:
             env = self.make_env()
@@ -156,25 +158,31 @@ class EnvController():
                     act = network.gen_act(obs)
                 act = self.act_transform(act, agent_id)
 
-                obs_next, rew, d, _ = env.step(act)
+                as_reward = 0
+                for i in range(act_skip):
+                    obs_next, rew, d, _ = env.step(act)
+                    as_reward += rew
+                    if d:
+                        break
+
                 obs_next = self.obs_transform(obs_next, agent_id)
 
                 if render:
                     env.render()
                     time.sleep(0.02)
 
-                self.mb.record(agent_id, obs, act, rew, obs_next)
+                self.mb.record(agent_id, obs, act, as_reward, obs_next)
                 obs = obs_next
 
                 if d:
                     break
                     
-    def sim_episodes(self, network, n_episodes=1, max_steps=200, render=False, return_data=False):
+    def sim_episodes(self, network, n_episodes=1, max_steps=200, render=False, return_data=False, act_skip=1):
         threads = []
         ept = [int(n_episodes // self.n_threads) for i in range(self.n_threads)] # Episodes per thread
         ept[:(n_episodes % self.n_threads)] += np.ones((n_episodes % self.n_threads,))
         for i in range(self.n_threads):
-            new_thread = threading.Thread(target=self.sim_thread, args=(i, network, int(ept[i]), max_steps, render))
+            new_thread = threading.Thread(target=self.sim_thread, args=(i, network, int(ept[i]), max_steps, render, act_skip))
             threads.append(new_thread)
             new_thread.start()
             
