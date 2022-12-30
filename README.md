@@ -1,6 +1,6 @@
 # Ludus
 
-Ludus is a reinforcement learning library for expediating development of RL applications and research. Ludus is still in an alpha development stage, so new algorithms and models are continuously being added with the growth of the framework. You can find many state-of-the-art algorithms implemented and ready to use. Additionly, the platform has ready to go integration with popular training environments like OpenAI's [gym](https://gym.openai.com/). The high level API of Ludus combined with easily accesible and well documented, open source code allows for both efficiency and control.
+Ludus is a set of baseline algorithm implementations and utilities for reinforcement learning. Several ready-to-go examples are included, demonstrating use with environments from OpenAI's [gym](https://gym.openai.com/).
 
 ## Getting Started
 
